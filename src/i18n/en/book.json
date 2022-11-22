@@ -1,0 +1,22 @@
+{
+  "errors": {
+    "validation": {
+      "length": {
+        "title": "title Must be Between 1 to 1809 characters",
+        "isbn": "ISBN Must be 18 characters"
+      },
+      "notEmpty": {
+        "title": "title Must Be Provided",
+        "isbn": "ISBN Must be Provided",
+        "publishDate": "Publish Date Must be Provided"
+      },
+      "uniqueTitle": "Book title Must Be Unique"
+    },
+    "invalidID": "Book Was Not Found"
+  },
+  "success": {
+    "creation": "You have Successfully Created a Book",
+    "checkoutDate": "Successfully Checked Out",
+    "checkInDate": "Successfully Checked In"
+  }
+}
