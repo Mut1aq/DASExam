@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookStatus } from 'src/shared/enums/book-status.enum';
 import { ReturnMessage } from 'src/shared/interfaces/return-message.interface';
+import { checkArrayNullability } from 'src/shared/util/check-nullability.util';
 import { currentDate } from 'src/shared/util/date.util';
 import { Repository } from 'typeorm';
 import { User } from '../user/entities/user.entity';
@@ -20,7 +21,6 @@ export class BookService {
     const userID = req?.user?.id;
     const book = this.bookRepository.create(createBookDto);
     const user = await this.userRepository.findOneBy({ id: userID });
-    book.status = BookStatus.CheckedIn;
     book.updateDate = currentDate;
     book.user = user;
 
@@ -32,21 +32,37 @@ export class BookService {
     };
   }
 
-  findAll() {
-    return this.bookRepository.find({
+  async findAll(): Promise<ReturnMessage | Book[]> {
+    const books = await this.bookRepository.find({
       relations: {
         user: true,
       },
     });
+
+    if (!checkArrayNullability(books)) {
+      return {
+        message: 'book.errors.validation.noBooksFound',
+        statusCode: HttpStatus.NO_CONTENT,
+      };
+    }
+    return books;
   }
 
-  findAllAvailableBooks() {
-    return this.bookRepository.find({
+  async findAllAvailableBooks(): Promise<ReturnMessage | Book[]> {
+    const books = await this.bookRepository.find({
       where: { status: BookStatus.CheckedIn },
       relations: {
         user: true,
       },
     });
+
+    if (!checkArrayNullability(books)) {
+      return {
+        message: 'book.errors.validation.noBooksFound',
+        statusCode: HttpStatus.NO_CONTENT,
+      };
+    }
+    return books;
   }
 
   findOne(id: number) {

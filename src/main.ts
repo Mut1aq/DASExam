@@ -35,7 +35,18 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('DAS Exam')
     .setDescription('Exam to test my capabilities')
-    .addBearerAuth()
+    .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-auth',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

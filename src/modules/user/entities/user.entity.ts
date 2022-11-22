@@ -8,21 +8,34 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity('user')
 export class User extends Basic {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: '150',
+    unique: true,
+  })
   email: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: '150',
+  })
   fullName: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: '150',
+  })
   password: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: '150',
+  })
   dob: string;
 
   @OneToMany(() => Book, (book) => book.user)

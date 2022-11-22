@@ -1,23 +1,27 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Basic } from './Basic.entity';
 
-@Entity('')
+@Entity('book_checkout')
 export class BookCheckout extends Basic {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @Column('bigint')
+  @Column({
+    type: 'bigint',
+  })
   bookID: number;
 
-  @Column('bigint')
+  @Column({
+    type: 'bigint',
+  })
   userID: number;
 
-  @Column('varchar', { nullable: true })
+  @Column({ nullable: true, type: 'varchar', length: '150' })
   checkoutDate?: string;
 
-  @Column('varchar', { nullable: true })
+  @Column({ nullable: true, type: 'varchar', length: '150' })
   checkInDate?: string;
 
-  @Column('bigint', { nullable: true })
+  @Column({ nullable: true, type: 'int' })
   fees?: number;
 }

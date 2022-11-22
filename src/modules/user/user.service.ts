@@ -37,15 +37,18 @@ export class UserService {
     const book = await this.bookRepository.findOneBy({ id: bookID });
 
     if (!book)
-      throw new HttpException('book.errors.invalidID', HttpStatus.BAD_REQUEST);
-
-    book.status =
-      book.status === BookStatus.CheckedIn
-        ? BookStatus.CheckedOut
-        : BookStatus.CheckedIn;
-
-    const status =
-      +book.status === BookStatus.CheckedIn ? 'checkInDate' : 'checkoutDate';
+      throw new HttpException('book.errors.invalidID', HttpStatus.NOT_FOUND);
+    let status: string;
+    switch (+book.status) {
+      case BookStatus.CheckedIn:
+        book.status = BookStatus.CheckedOut;
+        status = 'checkoutDate';
+        break;
+      case BookStatus.CheckedOut:
+        book.status = BookStatus.CheckedIn;
+        status = 'checkInDate';
+        break;
+    }
 
     const bookCheckRecord: BookCheckout = {
       bookID,
@@ -65,6 +68,7 @@ export class UserService {
     return {
       message: `book.success.${status}`,
       statusCode: 200,
+      fees: bookCheckRecord.fees,
     };
   }
 
@@ -87,7 +91,7 @@ export class UserService {
       if (lastCheckout.length < 0) return 0;
       const businessDays = this.getBusinessDays(
         currentDate,
-        lastCheckout[0]['checkoutDate'],
+        lastCheckout[0]?.checkoutDate,
       );
       if (businessDays > 5) return (businessDays - 5) * 5;
       return 0;
@@ -96,14 +100,14 @@ export class UserService {
 
   getBusinessDays(startDate: any, endDate: any): number {
     startDate = new Date(startDate.slice(0, startDate.indexOf(',')));
-    endDate = new Date(endDate.slice(0, endDate.indexOf(',')));
+    endDate = new Date(endDate?.slice(0, endDate?.indexOf(',')));
 
     let count = 0;
-    const curDate = new Date(startDate.getTime());
+    const curDate = new Date(startDate?.getTime());
     while (curDate <= endDate) {
-      const dayOfWeek = curDate.getDay();
+      const dayOfWeek = curDate?.getDay();
       if (dayOfWeek !== 0 && dayOfWeek !== 6) count++;
-      curDate.setDate(curDate.getDate() + 1);
+      curDate?.setDate(curDate?.getDate() + 1);
     }
     return count;
   }

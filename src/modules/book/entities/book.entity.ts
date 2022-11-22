@@ -3,21 +3,36 @@ import { User } from 'src/modules/user/entities/user.entity';
 import { BookStatus } from 'src/shared/enums/book-status.enum';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('book')
 export class Book extends Basic {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: '150',
+    unique: true,
+  })
   title: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: '150',
+  })
   ISBN: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: '150',
+  })
   publishDate: string;
 
-  @Column()
+  @Column({
+    type: 'int',
+    enum: BookStatus,
+    width: 1,
+    default: 2,
+  })
   status: BookStatus;
 
   @ManyToOne(() => User, (user) => user.createdBooks)

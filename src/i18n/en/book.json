@@ -10,7 +10,8 @@
         "isbn": "ISBN Must be Provided",
         "publishDate": "Publish Date Must be Provided"
       },
-      "uniqueTitle": "Book title Must Be Unique"
+      "uniqueTitle": "Book title Must Be Unique",
+      "noBooksFound": "No Books Found"
     },
     "invalidID": "Book Was Not Found"
   },
